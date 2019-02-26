@@ -1,4 +1,6 @@
 import orders from '../../data/orders.json';
+import getUserInfo from './task2';
+
 /**
  * Replace digits by *
  * @param {String} bank card number
@@ -77,10 +79,10 @@ const createTableRow = data => {
   for (let prop in currentOrder) {
     const td = document.createElement('td');
     if (prop === 'User Info') {
+      const val = getUserInfo(currentOrder[prop]);
       td.classList.add('user_data');
-    }
-
-    if (prop === 'Order Date') {
+      td.appendChild(val);
+    } else if (prop === 'Order Date') {
       const val = converDate(currentOrder[prop]);
       td.textContent = val;
     } else if (prop === 'Card Number') {
@@ -92,6 +94,7 @@ const createTableRow = data => {
     } else {
       td.textContent = currentOrder[prop];
     }
+
     tr.appendChild(td);
   }
   return tr;
