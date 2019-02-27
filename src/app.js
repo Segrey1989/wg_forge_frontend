@@ -1,17 +1,8 @@
-import createTable from './tasks/task1';
-
-const tableHeaders = [
-  'Transaction ID',
-  'User Info',
-  'Order Date',
-  'Order Amount',
-  'Card Number',
-  'Card Type',
-  'Location',
-];
+import createTable from './tasks/Table';
+import data from './tasks/processData';
 
 export default (function() {
   const app = document.getElementById('app');
-  const table = createTable(tableHeaders);
+  const table = createTable(data);
   app.appendChild(table);
 })();
