@@ -11,8 +11,8 @@ styles['user-details'] = `
   border-radius: 5px;
   `;
 
-styles['link'] = `
-  
+styles['sort-selected'] = `
+  cursor:pointer;
   `;
 
 export default styles;

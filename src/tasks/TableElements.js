@@ -1,5 +1,6 @@
 import styles from './styleCreator';
-import { clickInfoEvent, clickLinkEvent } from './events';
+import { clickInfoEvent, clickLinkEvent, clickHeaderEvent } from './events';
+
 /**
  * Create thead with headers of columns
  * @param {*} headers
@@ -12,11 +13,16 @@ const createTableHead = headers => {
   headers.map(header => {
     const elem = th.cloneNode(true);
     elem.innerHTML = header;
+    if (elem.innerText !== 'Card Number') {
+      elem.classList.add('sort-selected');
+      elem.style.cssText = styles['sort-selected'];
+    }
     tr.appendChild(elem);
     return header;
   });
   thead.appendChild(tr);
-  console.log(thead);
+
+  thead.addEventListener('click', clickHeaderEvent);
   return thead;
 };
 

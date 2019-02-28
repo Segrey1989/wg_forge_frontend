@@ -35,4 +35,39 @@ const transformCardNumber = card => {
   const replacer = secretPart.replace(/[0-9]/g, '*');
   return number.replace(secretPart, replacer);
 };
-export { convertDate, transformCardNumber };
+
+const sortAlpha = (a, b) => {
+  if (a < b) return -1;
+  if (a > b) return 1;
+  return 0;
+};
+
+/**
+ * Sort by additional parameter already sorted array by main parameter.
+ * Return doubly sorted array by 2 parameters
+ * @param {Array} sortedArr
+ * @param {String} sortParam
+ */
+const sortBySecondParam = (sortedArr, sortParam) => {
+  let sortedArrCopy = sortedArr.slice();
+  let array = [];
+
+  while (true) {
+    const country = sortedArrCopy[0]['Location'].slice(0, 2);
+    const index = sortedArrCopy.findIndex(order => {
+      return order['Location'].slice(0, 2) !== country;
+    });
+    if (index === -1) break;
+
+    const filteredByCountry = sortedArrCopy.splice(0, index);
+    const sortedByIp = filteredByCountry.sort((a, b) => {
+      const val1 = a[`${sortParam}`].slice(4, -1);
+      const val2 = b[`${sortParam}`].slice(4, -1);
+      return sortAlpha(val1, val2);
+    });
+    array = array.concat(sortedByIp);
+  }
+  return array;
+};
+
+export { convertDate, transformCardNumber, sortAlpha, sortBySecondParam };
