@@ -65,6 +65,7 @@ const getUserInfo = user => {
     if (currentUser.gender === 'Male') userName = `Mr. ${userName}`;
     else userName = `Ms. ${userName}`;
     userData.userName = userName;
+    userData.gender = currentUser.gender;
   }
   return userData;
 };

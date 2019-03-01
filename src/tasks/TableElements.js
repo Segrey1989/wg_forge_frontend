@@ -1,5 +1,6 @@
 import styles from './styleCreator';
 import { clickInfoEvent, clickLinkEvent, clickHeaderEvent } from './events';
+import statistic from './statistic';
 
 /**
  * Create thead with headers of columns
@@ -107,4 +108,23 @@ const createTableRow = data => {
   return tr;
 };
 
-export { createTableHead, createTableRow };
+const createStatisticBlock = () => {
+  const statisticCopy = statistic;
+  const fragment = document.createDocumentFragment();
+
+  for (let prop in statisticCopy) {
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td');
+    td1.innerText = prop;
+    td1.setAttribute('colspan', 2);
+    tr.appendChild(td1);
+    const td2 = document.createElement('td');
+    td2.innerText = statisticCopy[prop];
+    td2.setAttribute('colspan', 5);
+    tr.appendChild(td2);
+    fragment.appendChild(tr);
+  }
+  return fragment;
+};
+
+export { createTableHead, createTableRow, createStatisticBlock };

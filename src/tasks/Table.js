@@ -1,4 +1,8 @@
-import { createTableHead, createTableRow } from './TableElements';
+import {
+  createTableHead,
+  createTableRow,
+  createStatisticBlock,
+} from './TableElements';
 
 const tableHeaders = [
   'Transaction ID',
@@ -23,6 +27,8 @@ const createTable = data => {
 
   const ordersInRow = orders.map(order => createTableRow(order));
   ordersInRow.map(row => tbody.appendChild(row));
+
+  tbody.appendChild(createStatisticBlock());
 
   table.appendChild(thead);
   table.appendChild(tbody);

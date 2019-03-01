@@ -70,4 +70,21 @@ const sortBySecondParam = (sortedArr, sortParam) => {
   return array;
 };
 
-export { convertDate, transformCardNumber, sortAlpha, sortBySecondParam };
+/**
+ * Convert number to money format
+ * @param {Number} num
+ */
+const convertToMoney = num => {
+  return `$ ${num
+    .toFixed(2)
+    .replace(/(\d)(?=(\d{3})+\.)/g, '$1 ')
+    .replace('.', ',')}`;
+};
+
+export {
+  convertDate,
+  transformCardNumber,
+  sortAlpha,
+  sortBySecondParam,
+  convertToMoney,
+};
