@@ -60,8 +60,11 @@ const getMediumValue = data => {
 const getAverageBill = data => {
   const commonCost = getOrdersCost(data);
   const ordersNumber = getOrderAmount(data);
-  const average = commonCost / ordersNumber;
-  return average;
+  if (ordersNumber) {
+    const average = commonCost / ordersNumber;
+    return average;
+  }
+  return 0;
 };
 
 /**
@@ -78,7 +81,6 @@ const getGenderAverage = (data, gender) => {
   const genderArr = dataCopy.filter(
     order => order['User Info']['gender'].toLowerCase() === genderPointer,
   );
-
   const genderCommonCost = getAverageBill(genderArr);
   return genderCommonCost;
 };
