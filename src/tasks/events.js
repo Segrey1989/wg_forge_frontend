@@ -1,6 +1,8 @@
 import createTable from './Table';
 import data from './processData';
 import { sortAlpha, sortBySecondParam } from './helper';
+import searchByInput from './search';
+import { fillTableBody } from './TableElements';
 
 /**
  * This event hide additional user information when the div with the info was clicked
@@ -93,4 +95,20 @@ const clickHeaderEvent = event => {
   }
 };
 
-export { clickInfoEvent, clickLinkEvent, clickHeaderEvent };
+/**
+ * Change the tbody element, when user type anything in input#search field
+ * @param {Event} event
+ * @param {Array} data
+ */
+const inputChangeEvent = (event, data) => {
+  const dataCopy = data.slice();
+  const inputValue = event.target.value;
+  const tbodyElement = document.querySelector('tbody');
+  const filteredData = searchByInput(dataCopy, inputValue);
+  const tbodyContent = fillTableBody(filteredData);
+
+  tbodyElement.innerHTML = '';
+  tbodyElement.appendChild(tbodyContent);
+};
+
+export { clickInfoEvent, clickLinkEvent, clickHeaderEvent, inputChangeEvent };

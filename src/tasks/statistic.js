@@ -1,4 +1,4 @@
-import data from './processData';
+// import data from './processData';
 import { convertToMoney } from './helper';
 
 /**
@@ -43,11 +43,11 @@ const getMediumValue = data => {
       sortedData[mediumIndex]['Order Amount'].slice(1),
     );
     const medium2 = parseFloat(
-      sortedData[mediumIndex + 1]['Order Amount'].slice(1),
+      sortedData[mediumIndex - 1]['Order Amount'].slice(1),
     );
     mediumCost = (medium1 + medium2) / 2;
   } else {
-    const mediumIndex = Math.ceil(sortedData.length / 2);
+    const mediumIndex = Math.floor(sortedData.length / 2);
     mediumCost = parseFloat(sortedData[mediumIndex]['Order Amount'].slice(1));
   }
   return mediumCost;
@@ -83,16 +83,28 @@ const getGenderAverage = (data, gender) => {
   return genderCommonCost;
 };
 
-const statistic = {};
-statistic['Orders Count'] = getOrderAmount(data);
-statistic['Orders Total'] = convertToMoney(getOrdersCost(data));
-statistic['Median Value'] = convertToMoney(getMediumValue(data));
-statistic['Average Check'] = convertToMoney(getAverageBill(data));
-statistic['Average Check (Female)'] = convertToMoney(
-  getGenderAverage(data, 'female'),
-);
-statistic['Average Check (Male)'] = convertToMoney(
-  getGenderAverage(data, 'male'),
-);
+const getStatisticData = data => {
+  const statistic = {
+    'Orders Count': 'n/a',
+    'Orders Total': 'n/a',
+    'Median Value': 'n/a',
+    'Average Check': 'n/a',
+    'Average Check (Female)': 'n/a',
+    'Average Check (Male)': 'n/a',
+  };
+  if (data.length) {
+    statistic['Orders Count'] = getOrderAmount(data);
+    statistic['Orders Total'] = convertToMoney(getOrdersCost(data));
+    statistic['Median Value'] = convertToMoney(getMediumValue(data));
+    statistic['Average Check'] = convertToMoney(getAverageBill(data));
+    statistic['Average Check (Female)'] = convertToMoney(
+      getGenderAverage(data, 'female'),
+    );
+    statistic['Average Check (Male)'] = convertToMoney(
+      getGenderAverage(data, 'male'),
+    );
+  }
+  return statistic;
+};
 
-export default statistic;
+export default getStatisticData;

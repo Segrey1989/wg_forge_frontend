@@ -1,8 +1,6 @@
-import {
-  createTableHead,
-  createTableRow,
-  createStatisticBlock,
-} from './TableElements';
+import { createTableHead, fillTableBody } from './TableElements';
+
+import { inputChangeEvent } from './events';
 
 const tableHeaders = [
   'Transaction ID',
@@ -19,19 +17,21 @@ const tableHeaders = [
  * @param {Array} tableHeaders
  */
 const createTable = data => {
-  const orders = data.slice(0);
   const headers = tableHeaders.slice(0);
   const table = document.createElement('table');
   const tbody = document.createElement('tbody');
+
   const thead = createTableHead(headers);
+  tbody.appendChild(fillTableBody(data));
 
-  const ordersInRow = orders.map(order => createTableRow(order));
-  ordersInRow.map(row => tbody.appendChild(row));
-
-  tbody.appendChild(createStatisticBlock());
+  const inputEl = thead.querySelector('#search');
 
   table.appendChild(thead);
   table.appendChild(tbody);
+
+  inputEl.addEventListener('input', event => {
+    inputChangeEvent(event, data);
+  });
 
   return table;
 };

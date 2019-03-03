@@ -1,6 +1,6 @@
 import styles from './styleCreator';
 import { clickInfoEvent, clickLinkEvent, clickHeaderEvent } from './events';
-import statistic from './statistic';
+import getStatisticData from './statistic';
 
 /**
  * Create thead with headers of columns
@@ -10,6 +10,7 @@ const createTableHead = headers => {
   const thead = document.createElement('thead');
   const tr = document.createElement('tr');
   const th = document.createElement('th');
+  const searchRow = createSearchInput();
 
   headers.map(header => {
     const elem = th.cloneNode(true);
@@ -21,9 +22,10 @@ const createTableHead = headers => {
     tr.appendChild(elem);
     return header;
   });
+  thead.appendChild(searchRow);
   thead.appendChild(tr);
 
-  thead.addEventListener('click', clickHeaderEvent);
+  tr.addEventListener('click', clickHeaderEvent);
   return thead;
 };
 
@@ -76,6 +78,10 @@ const getUserInfo = user => {
   return userEl;
 };
 
+/**
+ * Create html element 'tr' where every 'td' contains info about order
+ * @param {Array} data
+ */
 const createTableRow = data => {
   const currentOrder = data;
   const tr = document.createElement('tr');
@@ -108,23 +114,69 @@ const createTableRow = data => {
   return tr;
 };
 
-const createStatisticBlock = () => {
-  const statisticCopy = statistic;
+/**
+ * Return html fragment with statistic data
+ */
+const createStatisticBlock = data => {
+  const statistic = getStatisticData(data);
   const fragment = document.createDocumentFragment();
 
-  for (let prop in statisticCopy) {
+  for (let prop in statistic) {
     const tr = document.createElement('tr');
     const td1 = document.createElement('td');
     td1.innerText = prop;
     td1.setAttribute('colspan', 2);
     tr.appendChild(td1);
     const td2 = document.createElement('td');
-    td2.innerText = statisticCopy[prop];
+    td2.innerText = statistic[prop];
     td2.setAttribute('colspan', 5);
     tr.appendChild(td2);
     fragment.appendChild(tr);
   }
+
   return fragment;
 };
 
-export { createTableHead, createTableRow, createStatisticBlock };
+/**
+ * Create fragment which contains all info about orders.
+ * @param {Array} data
+ */
+const fillTableBody = data => {
+  const orders = data.slice(0);
+  const tbodyFragment = document.createDocumentFragment();
+
+  if (orders.length) {
+    const ordersInRow = orders.map(order => createTableRow(order));
+    ordersInRow.map(row => tbodyFragment.appendChild(row));
+  } else {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.innerText = 'Nothing found';
+    tr.appendChild(td);
+    tbodyFragment.appendChild(tr);
+  }
+  tbodyFragment.appendChild(createStatisticBlock(data));
+  return tbodyFragment;
+};
+
+/**
+ * Create tr element with input field
+ */
+const createSearchInput = () => {
+  const tr = document.createElement('tr');
+  const search = document.createElement('th');
+  search.innerText = 'Search:';
+  search.setAttribute('colspan', 1);
+  tr.appendChild(search);
+
+  const input = document.createElement('input');
+  const searchInput = document.createElement('th');
+  input.id = 'search';
+  input.setAttribute('type', 'text');
+  searchInput.appendChild(input);
+  searchInput.setAttribute('colspan', 6);
+  tr.appendChild(searchInput);
+  return tr;
+};
+
+export { createTableHead, createTableRow, createStatisticBlock, fillTableBody };
