@@ -90,6 +90,7 @@ const clickHeaderEvent = event => {
       elem => elem.innerText === eventTargetName,
     )[0];
     selectedEl.innerHTML = `<th>${eventTargetName} <span>&#8595;</span></th>`;
+    selectedEl.classList.add('info');
     app.innerHTML = '';
     app.appendChild(newTable);
   }

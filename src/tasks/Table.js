@@ -19,6 +19,7 @@ const tableHeaders = [
 const createTable = data => {
   const headers = tableHeaders.slice(0);
   const table = document.createElement('table');
+  table.classList.add('table', 'table-bordered', 'table-hover');
   const tbody = document.createElement('tbody');
 
   const thead = createTableHead(headers);

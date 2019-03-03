@@ -14,6 +14,7 @@ const createTableHead = headers => {
 
   headers.map(header => {
     const elem = th.cloneNode(true);
+    elem.classList.add('text-center');
     elem.innerHTML = header;
     if (elem.innerText !== 'Card Number') {
       elem.classList.add('sort-selected');
@@ -44,7 +45,9 @@ const appendUserInfo = user => {
   if (userClone.birthday) info.birthday += userClone.birthday;
 
   if (userClone.avatarUrl)
-    info.avatar = `<img src ='${userClone.avatarUrl}' width="100px"/>`;
+    info.avatar = `<img src ='${
+      userClone.avatarUrl
+    }' width="100px" class='img-circle'/>`;
   let companyUrl;
   if (userClone.companyUrl) companyUrl = userClone.companyUrl;
   else companyUrl = '#';
@@ -151,6 +154,7 @@ const fillTableBody = data => {
   } else {
     const tr = document.createElement('tr');
     const td = document.createElement('td');
+    td.setAttribute('colspan', 7);
     td.innerText = 'Nothing found';
     tr.appendChild(td);
     tbodyFragment.appendChild(tr);
@@ -167,12 +171,14 @@ const createSearchInput = () => {
   const search = document.createElement('th');
   search.innerText = 'Search:';
   search.setAttribute('colspan', 1);
+  search.classList.add('text-center', 'lead');
   tr.appendChild(search);
 
   const input = document.createElement('input');
   const searchInput = document.createElement('th');
   input.id = 'search';
   input.setAttribute('type', 'text');
+  input.setAttribute('autofocus', 'autofocus');
   searchInput.appendChild(input);
   searchInput.setAttribute('colspan', 6);
   tr.appendChild(searchInput);
