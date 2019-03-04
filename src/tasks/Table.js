@@ -1,5 +1,4 @@
 import { createTableHead, fillTableBody } from './TableElements';
-
 import { inputChangeEvent } from './events';
 
 const tableHeaders = [
@@ -22,7 +21,7 @@ const createTable = data => {
   table.classList.add('table', 'table-bordered', 'table-hover');
   const tbody = document.createElement('tbody');
 
-  const thead = createTableHead(headers);
+  const thead = createTableHead(data, headers);
   tbody.appendChild(fillTableBody(data));
 
   const inputEl = thead.querySelector('#search');

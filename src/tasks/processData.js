@@ -1,15 +1,26 @@
-import orders from '../../data/orders.json';
-import users from '../../data/users.json';
-import companies from '../../data/companies.json';
-
 import { convertDate, transformCardNumber } from './helper';
-// import { findUser, findCompany } from './parsingData';
+
+/**
+ * Take array of strings as parameter and return array of links
+ * for fetch data
+ * @param {Array} arr
+ */
+const makeUrlArr = arr => {
+  if (arr.length) {
+    const urls = arr.map(name => {
+      if (typeof name === 'string')
+        return `http://localhost:9000/api/${name}.json`;
+    });
+    return urls;
+  }
+  return [];
+};
 
 /**
  * Return user with a specific id from array of users
  * @param {Number} userId
  */
-const findUser = userId => {
+const findUser = (users, userId) => {
   const usersArr = users.slice(0);
   const currentUser = usersArr.find(user => user.id === userId);
   return currentUser;
@@ -19,7 +30,7 @@ const findUser = userId => {
  * Return the company with a specific id from the companies array
  * @param {Number} companyId
  */
-const findCompany = companyId => {
+const findCompany = (companies, companyId) => {
   const companiesClone = companies.slice(0);
   const currentCompany = companiesClone.find(
     company => company.id === companyId,
@@ -31,10 +42,10 @@ const findCompany = companyId => {
  * Gather all information about user and return the object with the info
  * @param {Object} user
  */
-const appendUserInfo = user => {
+const appendUserInfo = (companies, user) => {
   const userClone = user;
   const companyId = userClone.company_id;
-  const company = findCompany(companyId);
+  const company = findCompany(companies, companyId);
 
   const info = {};
   if (userClone.birthday)
@@ -74,7 +85,7 @@ const getUserInfo = user => {
  * Get the all information about every order and return the array with
  * objects of full order information
  */
-const processOrders = () => {
+const processOrders = (orders, users, companies) => {
   const ordersCopy = orders.slice(0);
   const processedOrdersArr = [];
   ordersCopy.map(data => {
@@ -88,16 +99,33 @@ const processOrders = () => {
     currentOrder['Card Type'] = data['card_type'];
     currentOrder['Location'] = `${data['order_country']} (${data['order_ip']})`;
 
-    const currentUser = findUser(currentOrder['User Info']);
+    const currentUser = findUser(users, currentOrder['User Info']);
     const user = getUserInfo(currentUser);
     currentOrder['User Info'] = user;
-    currentOrder['User Info']['additionalInfo'] = appendUserInfo(currentUser);
-
+    currentOrder['User Info']['additionalInfo'] = appendUserInfo(
+      companies,
+      currentUser,
+    );
     processedOrdersArr.push(currentOrder);
   });
-
   return processedOrdersArr;
 };
 
-const data = processOrders();
+const urls = makeUrlArr(['orders', 'companies', 'users']);
+const data = Promise.all(
+  urls.map(url =>
+    fetch(url).then(resp => {
+      if (resp.ok) return resp.json();
+      throw new Error('Problem to fetch the data');
+    }),
+  ),
+)
+  .then(dataArr => {
+    const orders = dataArr[0];
+    const companies = dataArr[1];
+    const users = dataArr[2];
+    return processOrders(orders, users, companies);
+  })
+  .catch(err => console.log(err));
+
 export default data;

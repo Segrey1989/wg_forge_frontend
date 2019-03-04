@@ -1,5 +1,4 @@
 import createTable from './Table';
-import data from './processData';
 import { sortAlpha, sortBySecondParam } from './helper';
 import searchByInput from './search';
 import { fillTableBody } from './TableElements';
@@ -10,10 +9,15 @@ import { fillTableBody } from './TableElements';
  */
 const clickInfoEvent = event => {
   const { parentElement } = event.target;
-  const classList = Array.from(parentElement.classList);
-  if (classList.includes('user-details')) {
-    parentElement.style.display = 'none';
-  }
+  const els = Array.from(document.querySelectorAll('.user-details'));
+
+  const children = Array.from(parentElement.children);
+  const targ = children.filter(child => {
+    const cl = Array.from(child.classList);
+    return cl.includes('user-details');
+  });
+
+  if (!targ.length) els.map(el => (el.style.display = 'none'));
 };
 
 /**
@@ -23,7 +27,6 @@ const clickInfoEvent = event => {
 const clickLinkEvent = event => {
   event.preventDefault();
   const nextDivElement = event.target.nextElementSibling;
-
   if (nextDivElement.style.display === 'none') {
     nextDivElement.style.display = 'block';
   } else {
@@ -77,7 +80,7 @@ const sortData = (data, sortParam) => {
  * the criterion and table reload
  * @param {Event} event
  */
-const clickHeaderEvent = event => {
+const clickHeaderEvent = (data, event) => {
   event.preventDefault();
   const app = document.getElementById('app');
   const eventTargetName = event.target.innerText;

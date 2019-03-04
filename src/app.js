@@ -3,6 +3,10 @@ import data from './tasks/processData';
 
 export default (function() {
   const app = document.getElementById('app');
-  const table = createTable(data);
-  app.appendChild(table);
+  data
+    .then(result => {
+      const table = createTable(result);
+      app.appendChild(table);
+    })
+    .catch(err => console.log(err));
 })();

@@ -6,7 +6,7 @@ import getStatisticData from './statistic';
  * Create thead with headers of columns
  * @param {*} headers
  */
-const createTableHead = headers => {
+const createTableHead = (data, headers) => {
   const thead = document.createElement('thead');
   const tr = document.createElement('tr');
   const th = document.createElement('th');
@@ -26,7 +26,9 @@ const createTableHead = headers => {
   thead.appendChild(searchRow);
   thead.appendChild(tr);
 
-  tr.addEventListener('click', clickHeaderEvent);
+  tr.addEventListener('click', event => {
+    clickHeaderEvent(data, event);
+  });
   return thead;
 };
 
@@ -50,19 +52,23 @@ const appendUserInfo = user => {
     }' width="100px" class='img-circle'/>`;
   let companyUrl;
   if (userClone.companyUrl) companyUrl = userClone.companyUrl;
-  else companyUrl = '#';
+  else companyUrl = '';
 
-  info.company = `Company: <a href="${companyUrl}" target="_blank">${
-    userClone.companyTitle
-  }</a>`;
-  info.industry = `Idustry: ${userClone.industry}`;
+  if (companyUrl) {
+    info.company = `Company: <a href="${companyUrl}" target="_blank">${userClone.companyTitle ||
+      'n/a'}</a>`;
+  } else {
+    info.company = `Company: ${userClone.companyTitle || 'n/a'}`;
+  }
+
+  info.industry = `Idustry: ${userClone.industry || 'n/a'}`;
 
   for (let prop in info) {
     const p = document.createElement('p');
     p.innerHTML = info[prop];
     div.appendChild(p);
   }
-  div.addEventListener('click', clickInfoEvent);
+  document.addEventListener('click', clickInfoEvent);
   return div;
 };
 
