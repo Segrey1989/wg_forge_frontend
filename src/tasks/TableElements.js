@@ -1,16 +1,29 @@
 import styles from './styleCreator';
-import { clickInfoEvent, clickLinkEvent, clickHeaderEvent } from './events';
+import {
+  clickInfoEvent,
+  clickLinkEvent,
+  clickHeaderEvent,
+} from './events/events';
 import getStatisticData from './statistic';
+import createSelectRateEl from './moneyRates';
+import dataStorage from './dataStorage';
+import { convertToMoney } from './helper';
 
-/**
- * Create thead with headers of columns
- * @param {*} headers
- */
-const createTableHead = (data, headers) => {
-  const thead = document.createElement('thead');
+const tableHeaders = [
+  'Transaction ID',
+  'User Info',
+  'Order Date',
+  'Order Amount',
+  'Card Number',
+  'Card Type',
+  'Location',
+];
+
+const createHeadersRow = () => {
+  const data = dataStorage.ordersData.slice();
+  const headers = tableHeaders.slice();
   const tr = document.createElement('tr');
   const th = document.createElement('th');
-  const searchRow = createSearchInput();
 
   headers.map(header => {
     const elem = th.cloneNode(true);
@@ -23,12 +36,20 @@ const createTableHead = (data, headers) => {
     tr.appendChild(elem);
     return header;
   });
+
+  tr.addEventListener('click', clickHeaderEvent);
+  return tr;
+};
+/**
+ * Create thead with headers of columns
+ * @param {*} headers
+ */
+const createTableHead = () => {
+  const thead = document.createElement('thead');
+  const searchRow = createSearchInput();
+  const tr = createHeadersRow();
   thead.appendChild(searchRow);
   thead.appendChild(tr);
-
-  tr.addEventListener('click', event => {
-    clickHeaderEvent(data, event);
-  });
   return thead;
 };
 
@@ -113,7 +134,10 @@ const createTableRow = data => {
     } else if (prop === 'Card Number') {
       td.textContent = currentOrder[prop];
     } else if (prop === 'Order Amount') {
-      td.textContent = currentOrder[prop];
+      td.textContent = convertToMoney(
+        parseFloat(currentOrder[prop]),
+        dataStorage.currentCurrensyCode,
+      );
     } else {
       td.textContent = currentOrder[prop];
     }
@@ -132,6 +156,7 @@ const createStatisticBlock = data => {
 
   for (let prop in statistic) {
     const tr = document.createElement('tr');
+    tr.classList.add('statistic-row');
     const td1 = document.createElement('td');
     td1.innerText = prop;
     td1.setAttribute('colspan', 2);
@@ -151,7 +176,7 @@ const createStatisticBlock = data => {
  * @param {Array} data
  */
 const fillTableBody = data => {
-  const orders = data.slice(0);
+  const orders = data.slice();
   const tbodyFragment = document.createDocumentFragment();
 
   if (orders.length) {
@@ -186,9 +211,23 @@ const createSearchInput = () => {
   input.setAttribute('type', 'text');
   input.setAttribute('autofocus', 'autofocus');
   searchInput.appendChild(input);
-  searchInput.setAttribute('colspan', 6);
+  searchInput.setAttribute('colspan', 5);
   tr.appendChild(searchInput);
   return tr;
 };
 
-export { createTableHead, createTableRow, createStatisticBlock, fillTableBody };
+const addSelectRate = table => {
+  const tr = table.querySelector('tr');
+  const th = document.createElement('th');
+  tr.appendChild(th);
+  createSelectRateEl(th);
+};
+
+export {
+  createTableHead,
+  createTableRow,
+  createStatisticBlock,
+  fillTableBody,
+  addSelectRate,
+  createHeadersRow,
+};

@@ -1,27 +1,16 @@
-import { createTableHead, fillTableBody } from './TableElements';
-import { inputChangeEvent } from './events';
-
-const tableHeaders = [
-  'Transaction ID',
-  'User Info',
-  'Order Date',
-  'Order Amount',
-  'Card Number',
-  'Card Type',
-  'Location',
-];
+import { createTableHead, fillTableBody, addSelectRate } from './TableElements';
+import { inputChangeEvent } from './events/events';
 
 /**
  * Create a table with all information about the order
  * @param {Array} tableHeaders
  */
 const createTable = data => {
-  const headers = tableHeaders.slice(0);
   const table = document.createElement('table');
   table.classList.add('table', 'table-bordered', 'table-hover');
   const tbody = document.createElement('tbody');
 
-  const thead = createTableHead(data, headers);
+  const thead = createTableHead();
   tbody.appendChild(fillTableBody(data));
 
   const inputEl = thead.querySelector('#search');
@@ -29,10 +18,9 @@ const createTable = data => {
   table.appendChild(thead);
   table.appendChild(tbody);
 
-  inputEl.addEventListener('input', event => {
-    inputChangeEvent(event, data);
-  });
+  addSelectRate(table);
 
+  inputEl.addEventListener('input', inputChangeEvent);
   return table;
 };
 

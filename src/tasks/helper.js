@@ -67,6 +67,8 @@ const sortBySecondParam = (sortedArr, sortParam) => {
     });
     array = array.concat(sortedByIp);
   }
+  array = array.concat(sortedArrCopy);
+
   return array;
 };
 
@@ -74,11 +76,9 @@ const sortBySecondParam = (sortedArr, sortParam) => {
  * Convert number to money format
  * @param {Number} num
  */
-const convertToMoney = num => {
-  return `$ ${num
-    .toFixed(2)
-    .replace(/(\d)(?=(\d{3})+\.)/g, '$1 ')
-    .replace('.', ',')}`;
+const convertToMoney = (num, moneySign) => {
+  return `${moneySign} ${num.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1 ')}`;
+  // .replace('.', ',')}`
 };
 
 export {

@@ -1,5 +1,5 @@
 import { convertDate, transformCardNumber } from './helper';
-
+import dataStorage from './dataStorage';
 /**
  * Take array of strings as parameter and return array of links
  * for fetch data
@@ -94,7 +94,7 @@ const processOrders = (orders, users, companies) => {
     currentOrder['Transaction ID'] = data['transaction_id'];
     currentOrder['User Info'] = data['user_id'];
     currentOrder['Order Date'] = convertDate(data['created_at']);
-    currentOrder['Order Amount'] = `$${data['total']}`;
+    currentOrder['Order Amount'] = data['total'];
     currentOrder['Card Number'] = transformCardNumber(data['card_number']);
     currentOrder['Card Type'] = data['card_type'];
     currentOrder['Location'] = `${data['order_country']} (${data['order_ip']})`;
@@ -124,7 +124,9 @@ const data = Promise.all(
     const orders = dataArr[0];
     const companies = dataArr[1];
     const users = dataArr[2];
-    return processOrders(orders, users, companies);
+    const ordersData = processOrders(orders, users, companies);
+    dataStorage.ordersData = ordersData;
+    return ordersData;
   })
   .catch(err => console.log(err));
 
