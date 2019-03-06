@@ -59,11 +59,11 @@ const changeOrderAmountCurrency = (previousRate, currentRate) => {
       order['Order Amount'].replace(/[A-Za-z$-]/g, ''),
     );
     const newValue = (ammount / previousRate) * currentRate;
-
     const currentCol = document.querySelector(
       `#${order['row_id']} td:nth-child(4)`,
     );
     if (currentCol) {
+      currentCol.innerText = '';
       currentCol.innerText = convertToMoney(newValue, `${currensyCode}`);
     }
     order['Order Amount'] = `${newValue}`;

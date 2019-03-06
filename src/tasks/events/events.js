@@ -91,7 +91,11 @@ const inputChangeEvent = event => {
   tbodyElement.appendChild(tbodyContent);
 };
 
-const changeCurrencyEvent = (event, prev) => {
+/**
+ * Change money data in table after changing the currency
+ * @param {Number} prev
+ */
+const changeCurrencyEvent = prev => {
   const selectedEl = document.querySelector('select');
   var currencyCode = selectedEl.options[selectedEl.selectedIndex];
   dataStorage.currentCurrensyCode = currencyCode.value;

@@ -210,6 +210,7 @@ const createSearchInput = () => {
   input.id = 'search';
   input.setAttribute('type', 'text');
   input.setAttribute('autofocus', 'autofocus');
+  input.classList.add('form-control');
   searchInput.appendChild(input);
   searchInput.setAttribute('colspan', 5);
   tr.appendChild(searchInput);

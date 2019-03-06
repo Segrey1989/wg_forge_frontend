@@ -77,7 +77,10 @@ const sortBySecondParam = (sortedArr, sortParam) => {
  * @param {Number} num
  */
 const convertToMoney = (num, moneySign) => {
-  return `${moneySign} ${num.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1 ')}`;
+  const result = `${moneySign} ${num
+    .toFixed(2)
+    .replace(/(\d)(?=(\d{3})+\.)/g, '$1 ')}`;
+  return result;
   // .replace('.', ',')}`
 };
 

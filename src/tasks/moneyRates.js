@@ -18,7 +18,8 @@ const createSelectRateEl = htmlEl => {
       const rates = data.rates;
       const select = createSelectElement(rates);
       htmlEl.appendChild(select);
-    });
+    })
+    .catch(err => console.log(`Get rates data error: ${err}`));
 };
 
 /**
@@ -28,7 +29,6 @@ const createSelectRateEl = htmlEl => {
 const createSelectElement = ratesObj => {
   const select = document.createElement('select');
   select.classList.add('form-control');
-  select.setAttribute('data-live-search', 'true');
 
   const option = document.createElement('option');
   for (let key in ratesObj) {
@@ -45,7 +45,7 @@ const createSelectElement = ratesObj => {
 
   select.addEventListener('change', () => {
     const currencyCode = select.options[select.selectedIndex];
-    changeCurrencyEvent(event, dataStorage.previousRate);
+    changeCurrencyEvent(dataStorage.previousRate);
     dataStorage.previousRate = parseFloat(
       currencyCode.getAttribute('data-rate'),
     );
