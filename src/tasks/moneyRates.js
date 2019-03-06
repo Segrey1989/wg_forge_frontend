@@ -1,5 +1,11 @@
 import { changeCurrencyEvent } from './events/events';
+import dataStorage from './dataStorage';
 
+/**
+ * Get data about current rates from api, and
+ * append select element into the page
+ * @param {HTML container} htmlEl
+ */
 const createSelectRateEl = htmlEl => {
   return fetch('https://api.exchangeratesapi.io/latest')
     .then(result => {
@@ -15,9 +21,15 @@ const createSelectRateEl = htmlEl => {
     });
 };
 
+/**
+ * Get data about current rates, put it in select element
+ * @param {Array} ratesObj
+ */
 const createSelectElement = ratesObj => {
-  let previousValue;
   const select = document.createElement('select');
+  select.classList.add('form-control');
+  select.setAttribute('data-live-search', 'true');
+
   const option = document.createElement('option');
   for (let key in ratesObj) {
     const optionClone = option.cloneNode(true);
@@ -28,13 +40,15 @@ const createSelectElement = ratesObj => {
     select.appendChild(optionClone);
   }
 
-  select.addEventListener('click', event => {
-    const currencyCode = select.options[select.selectedIndex];
-    previousValue = parseFloat(currencyCode.getAttribute('data-rate'));
-  });
+  const currencyCode = select.options[select.selectedIndex];
+  dataStorage.previousRate = parseFloat(currencyCode.getAttribute('data-rate'));
 
   select.addEventListener('change', () => {
-    changeCurrencyEvent(event, previousValue);
+    const currencyCode = select.options[select.selectedIndex];
+    changeCurrencyEvent(event, dataStorage.previousRate);
+    dataStorage.previousRate = parseFloat(
+      currencyCode.getAttribute('data-rate'),
+    );
   });
   return select;
 };
